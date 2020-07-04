@@ -11,9 +11,10 @@
     font: inherit;
     padding: 5px;
     margin: 0 5px;
-    border: 1px solid salmon;
     cursor: pointer;
     outline: none;
+    border: none;
+    box-shadow: 0 10px 10px rgb(153, 153, 153);
 }
 
 .BuildControl button:disabled {
@@ -28,19 +29,19 @@
     cursor: not-allowed;
 }
 
-.label {
+.Label {
     padding: 10px;
     font-weight: bold;
     width: 80px;
 }
 
-.BuildControl.Less {
-    background-color: rgb(252, 98, 81);
+.BuildControl .Less {
+    background-color: #99b898;
     color: white;
 }
 
 .BuildControl .More {
-    background-color: salmon;
+    background-color: #438a5e;
     color: white;
 }
 
@@ -50,4 +51,3 @@
     color: white;
 }
 
- 
