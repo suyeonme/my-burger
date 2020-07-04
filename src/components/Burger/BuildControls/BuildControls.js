@@ -11,6 +11,7 @@ const controls = [
 
 const buildControls = props => (
     <div className={classes.BuildControls}>
+        <p>Current Price: <strong>{props.price.toFixed(2)}$</strong></p>
         {
             controls.map(ctrl => (
                 <BuildControl 
@@ -18,8 +19,11 @@ const buildControls = props => (
                     label={ctrl.label}
                     added={() => props.ingredientAdded(ctrl.type)}
                     removed={() => props.ingredientRemovded(ctrl.type)}
-                    disabled={props.disabled[ctrl.type]} />
+                    disabled={props.ingredients[ctrl.type] === 0 ? true : false} />
             ))}
+        <button 
+            className={classes.OrderButton} 
+            disabled={!props.purchasable}>ORDER NOW</button>
     </div>
 );
 

@@ -18,8 +18,19 @@ class BurgerBuilder extends Component {
             meat: 0,
             bacon: 0
         },
-        totalPrice: 4
+        totalPrice: 4,
+        purchasable: false
     };
+
+    updatePurchaseState = ingredients => {
+        
+        const sum = Object.keys(ingredients)
+            .map(ingKey => { return ingredients[ingKey]; }) // Return each value of ingredients
+            .reduce((sum, el) => { return sum + el }, 0);
+        
+        this.setState({purchasable: sum > 0 }); // True 
+    };
+
 
     addIngredientHandler = type => {
         // Update count 
@@ -35,7 +46,11 @@ class BurgerBuilder extends Component {
 
         // Assign updated count and price to state
         this.setState({ ingredients: updatedIngredients, totalPrice: newPrice });
+
+        // Enable button when adding ingredient
+        this.updatePurchaseState(updatedIngredients);
     };
+
 
     removeIngredientHandler = type => {
         // Update count 
@@ -55,17 +70,13 @@ class BurgerBuilder extends Component {
 
         // Assign updated count and price to state
         this.setState({ ingredients: updatedIngredients, totalPrice: newPrice });
+
+        // Enable button when adding ingredient
+        this.updatePurchaseState(updatedIngredients);
     };
 
+
     render() {
-
-        // Render button in in case of having ingredient
-        const disabledInfo = { ...this.state.ingredients };
-
-        for (let key in disabledInfo) {
-            disabledInfo[key] = disabledInfo[key] <= 0;  // return true(disabled). {salad: true, meat: false... }
-        };
-
 
         return (
             <>
@@ -73,7 +84,9 @@ class BurgerBuilder extends Component {
                 <BuildControls 
                     ingredientAdded={this.addIngredientHandler} 
                     ingredientRemovded={this.removeIngredientHandler}
-                    disabled={disabledInfo} />
+                    ingredients={this.state.ingredients}
+                    price={this.state.totalPrice}
+                    purchasable={this.state.purchasable} />
             </>
         );
     }
