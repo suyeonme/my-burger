@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import axios from '../../axios-orders';
 
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import WithErrorHandler from '../../hoc/WithErrorHandler/WithErrorHandler';
+
+import axios from '../../axios-orders';
 
 const INGREDIENT_PRICES = {
     salad: 0.5,
@@ -16,16 +18,22 @@ const INGREDIENT_PRICES = {
 
 class BurgerBuilder extends Component {
     state = {
-        ingredients: {
-            salad: 0,
-            cheese: 0,
-            meat: 0,
-            bacon: 0
-        },
+        ingredients: null,
         totalPrice: 4,
         purchasable: false,
         purchasing: false,
-        loading: false
+        loading: false,
+        error: false
+    };
+
+    componentDidMount () {
+        axios.get('https://react-my-burger-e7355.firebaseio.com/orders/ingredients.json')
+        .then(response => {
+            this.setState({ingredients: response.data});
+        })
+        .catch(error => {
+            this.setState({ error: true});
+        })
     };
 
     updatePurchaseState = (ingredients) => {
@@ -122,33 +130,44 @@ class BurgerBuilder extends Component {
 
     render() {
 
-        // Render spinner on UI
-        let orderSummary =  <OrderSummary 
-            ingredients={this.state.ingredients} 
-            cancelPurchasing={this.cancelPurchasingHandler}
-            continuePurchasing={this.continuePurchasingHandler}
-            price={this.state.totalPrice} />;
+        // Render spinner on UI while fetching data from server
+        let orderSummary = null;
+        let burger = this.state.error ? <p>Ingredients can't be loaded</p> : <Spinner />;
 
-        if(this.state.loading) {
-            orderSummary = <Spinner />
-        }
+
+        // Render a burger when get data from server
+        if (this.state.ingredients) {
+            burger = (
+                <>
+                    <Burger ingredients={this.state.ingredients} />
+                    <BuildControls 
+                        ingredientAdded={this.addIngredientHandler} 
+                        ingredientRemovded={this.removeIngredientHandler}
+                        ingredients={this.state.ingredients}
+                        price={this.state.totalPrice}
+                        purchasable={this.state.purchasable}
+                        ordered={this.purchasingHandler} />
+                </>
+            );
+
+            orderSummary =  <OrderSummary 
+                ingredients={this.state.ingredients} 
+                cancelPurchasing={this.cancelPurchasingHandler}
+                continuePurchasing={this.continuePurchasingHandler}
+                price={this.state.totalPrice} />;
+        };
+
+        if(this.state.loading) orderSummary = <Spinner />
 
         return (
             <>
                 <Modal show={this.state.purchasing} modalClosed={this.cancelPurchasingHandler}>
                     { orderSummary }
                 </Modal>
-                <Burger ingredients={this.state.ingredients} />
-                <BuildControls 
-                    ingredientAdded={this.addIngredientHandler} 
-                    ingredientRemovded={this.removeIngredientHandler}
-                    ingredients={this.state.ingredients}
-                    price={this.state.totalPrice}
-                    purchasable={this.state.purchasable}
-                    ordered={this.purchasingHandler} />
+                {burger}
             </>
         );
     }
 };
 
-export default BurgerBuilder;
+export default WithErrorHandler(BurgerBuilder, axios);
