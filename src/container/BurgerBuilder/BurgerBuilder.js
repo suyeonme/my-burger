@@ -27,12 +27,12 @@ class BurgerBuilder extends Component {
     };
 
     componentDidMount () {
-        axios.get('https://react-my-burger-e7355.firebaseio.com/orders/ingredients.json')
+        axios.get('Ingredients.json')
         .then(response => {
             this.setState({ingredients: response.data});
         })
         .catch(error => {
-            this.setState({ error: true});
+            this.setState({ error: true });
         })
     };
 
@@ -105,6 +105,7 @@ class BurgerBuilder extends Component {
         for (let i in this.state.ingredients) {
             queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i])); // property name = value of property name [bacon=0&cheese=1&meat=1&salad=2]
         };
+        queryParams.push('price=' + this.state.totalPrice);
         const queryString = queryParams.join('&');
 
         this.props.history.push({

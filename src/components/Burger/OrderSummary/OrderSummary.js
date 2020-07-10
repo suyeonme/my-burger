@@ -1,12 +1,11 @@
 import React, { Component }from 'react';
 import Button from '../../UI/Button/Button';
-import { render } from '@testing-library/react';
 
 class OrderSummary extends Component {
 
     // For debugging. It could be functional component
     componentDidUpdate() {
-        console.log('[OrderSummary.js] Didupdate');
+        console.log('[OrderSummary.js] update');
     };
     
     render() {
