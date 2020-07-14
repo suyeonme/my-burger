@@ -15,6 +15,7 @@ class Orders extends Component {
         .then(res => {
             // Convert an object on server to an array (key and object itself)
             const fetchedOrders = [];
+            
             for(let key in res.data) {
                 fetchedOrders.push({
                     ...res.data[key],
