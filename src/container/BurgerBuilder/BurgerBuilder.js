@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import axios from '../../axios-orders';
-import * as actionType from '../../store/actions';
+import * as actionType from '../../store/actions/actionTypes';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import WithErrorHandler from '../../hoc/WithErrorHandler/WithErrorHandler';
+
+import * as BurgerBuilderActions from '../../store/actions/index';
 
 
 class BurgerBuilder extends Component {
@@ -95,8 +97,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onIngredientAdded: (ingName) => dispatch({type: actionType.ADD_INGREDIENT, ingredientName: ingName}),
-        onIngredientRemoved: (ingName) => dispatch({type: actionType.DELETE_INGREDIENT, ingredientName: ingName})
+        onIngredientAdded: (ingName) => dispatch(BurgerBuilderActions.addIngredient(ingName)),
+        onIngredientRemoved: (ingName) => dispatch(BurgerBuilderActions.removeIngredient(ingName))
     };
 };
 
