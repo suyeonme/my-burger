@@ -7,10 +7,11 @@ export const authStart = () => {
     };
 };
 
-export const authSuccess= (authData) => {
+export const authSuccess= (idToken, localId) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
-        authData: authData
+        idToken: idToken,
+        localId: localId
     };
 };
 
@@ -39,7 +40,7 @@ export const auth = (email, password, isSignup) => {
         axios.post(url, authData)
             .then(res => {
                 console.log(res);
-                dispatch(authSuccess(res.data));
+                dispatch(authSuccess(res.data.idToken, res.data.localId));
             })
             .catch(err => {
                 console.log(err.response);
