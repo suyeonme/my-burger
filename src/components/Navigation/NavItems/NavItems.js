@@ -6,8 +6,11 @@ import NavItem from '../NavItem/NavItem';
 const navItems = props => (
     <ul className={classes.NavItems}>
         <NavItem link="/" exact>Burger Builder</NavItem>
-        <NavItem link="/orders" >Orders</NavItem>
-        <NavItem link="/auth" >Authentication</NavItem>
+        { props.isAuthenticated ? <NavItem link="/orders">Orders</NavItem> : null }
+        { !props.isAuthenticated
+            ? <NavItem link="/auth" >Authentication</NavItem>
+            : <NavItem link="/logout" >Logout</NavItem>
+        }
     </ul>
 );
 
