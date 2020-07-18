@@ -1,13 +1,7 @@
 import React, { Component }from 'react';
 import Button from '../../UI/Button/Button';
 
-class OrderSummary extends Component {
-
-    // For debugging. It could be functional component
-    componentDidUpdate() {
-        console.log('[OrderSummary.js] update');
-    };
-    
+class OrderSummary extends Component {    
     render() {
 
         const ingredientsSummary = Object.keys(this.props.ingredients)

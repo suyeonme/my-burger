@@ -6,9 +6,9 @@ import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import withErrorHandler from '../../../hoc/WithErrorHandler/WithErrorHandler';
-import classes from './ContactData.module.css';
-
+import { updateObject, checkValidation } from '../../../shared/utility';
 import * as actions from '../../../store/actions/index';
+import classes from './ContactData.module.css';
 
 class ContactData extends Component {
     state = {
@@ -97,41 +97,25 @@ class ContactData extends Component {
         const order = {
             ingredients: this.props.ings,
             price: this.props.price,
-            orderData: formData
+            orderData: formData,
+            localId: this.props.localId
         };
 
         // Post data to server
         this.props.onOrderBurger(order, this.props.token);
     };
 
-    checkValidation = (value, rules) => {
-        let isValid = true;
-
-        if (rules.requred) {
-            isValid = value.trim() !== '' && isValid; // True or false 
-        };
-
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid;
-        }
-
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid;
-        }
-        return isValid;
-    };
-
     inputChangedHandler = (e, identifier) => {
         // Update order form on changing input immutably
-        const updatedOrderForm = { ...this.state.orderForm };           // Clone 
-        const updatedFormElement = { ...updatedOrderForm[identifier] }  // name, city... 
-        updatedFormElement.value = e.target.value;
+        const updatedFormElement = updateObject(this.state.orderForm[identifier], {
+            value: e.target.value,
+            valid:  checkValidation(e.target.value, this.state.orderForm[identifier].validation), 
+            touched: true
+        });
 
-        // Check validation of an input 
-        updatedFormElement.valid = this.checkValidation(updatedFormElement.value, updatedFormElement.validation);  // True or false 
-        updatedFormElement.touched = true;
-
-        updatedOrderForm[identifier] = updatedFormElement;
+        const updatedOrderForm = updateObject(this.state.orderForm, {
+            [identifier]: updatedFormElement
+        });    
 
         // Check overall form validation to disable button
         let formIsValid = true;
@@ -190,7 +174,8 @@ const mapStateToProps = state => {
         ings: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
         loading: state.order.loading,
-        token: state.auth.token
+        token: state.auth.token,
+        localId: state.auth.localId
     };
 };
 

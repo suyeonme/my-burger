@@ -64,11 +64,14 @@ export const fetchOrderFail = error => {
     };
 };
 
-export const fetchOrders = (token) => {    
+export const fetchOrders = (token, localId) => {    
     return dispatch => {
         dispatch(fetchOrderStart());
 
-        axios.get('/orders.json?auth=' + token)
+        // Filter orders by user's localId (orderBy is FIREBASE property)
+        const queryParams = `?auth=${token}&orderBy="localId"&equalTo="${localId}"`;
+
+        axios.get('/orders.json' + queryParams)
             .then(res => {
                 // Convert an object from server to an array
                 const fetchedOrders = [];
