@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import asyncComponent from './hoc/asyncComponent/asyncComponent';
 
 import * as actions from './store/actions/index';
-import asyncComponent from './hoc/AsyncComponent/AsyncComponent';
 import Layout from './hoc/Layout/Layout';
 import BurgerBuilder from './container/BurgerBuilder/BurgerBuilder';
 import Logout from './container/Auth/Logout/Logout';

@@ -17,8 +17,7 @@ const authSuccess = (state, action) => {
         token: action.idToken,
         localId: action.localId,
         error: null,
-        loading: false,
-        authRedirectPath: '/'
+        loading: false
     })
 };
 
